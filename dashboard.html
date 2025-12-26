@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - JobConnect</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                JobConnect
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Find Jobs</a>
+                <a href="post-job.html">Post a Job</a>
+            </div>
+            <div class="nav-auth" id="auth-container">
+                <a href="login.html" class="btn btn-secondary">Login</a>
+                <a href="register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 id="dashboard-title">Dashboard</h1>
+                <p id="dashboard-subtitle" style="color:var(--text-muted);"></p>
+            </div>
+
+            <!-- Employer Dashboard -->
+            <div id="employer-dashboard" style="display:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+                    <h2>Your Job Postings</h2>
+                    <a href="post-job.html" class="btn btn-primary">+ Post New Job</a>
+                </div>
+                <div id="my-jobs-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Job Seeker Dashboard -->
+            <div id="seeker-dashboard" style="display:none;">
+                <h2 style="margin-bottom:24px;">Your Applications</h2>
+                <div id="applications-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Not Logged In -->
+            <div id="guest-dashboard" style="display:none;">
+                <div class="empty-state">
+                    <h3>Please login to view your dashboard</h3>
+                    <a href="login.html" class="btn btn-primary" style="margin-top:16px;">Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (!window.currentUser) {
+                    document.getElementById('guest-dashboard').style.display = 'block';
+                    document.getElementById('dashboard-title').textContent = 'Dashboard';
+                } else if (window.currentUser.role === 'employer') {
+                    document.getElementById('employer-dashboard').style.display = 'block';
+                    document.getElementById('dashboard-title').textContent = 'Employer Dashboard';
+                    document.getElementById('dashboard-subtitle').textContent = `Welcome back, ${window.currentUser.name}!`;
+                    loadMyJobs();
+                } else {
+                    document.getElementById('seeker-dashboard').style.display = 'block';
+                    document.getElementById('dashboard-title').textContent = 'My Applications';
+                    document.getElementById('dashboard-subtitle').textContent = `Welcome back, ${window.currentUser.name}!`;
+                    loadMyApplications();
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
