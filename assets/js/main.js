@@ -494,9 +494,14 @@ async function postJob(event) {
     submitBtn.textContent = 'Posting...';
     
     try {
+        // Check if we are updating or creating
+        const jobId = formData.get('id');
+        const action = jobId ? 'update' : 'create';
+        formData.set('action', action);
+        
         const response = await ajax(`${API_BASE}/jobs.php`, 'POST', formData);
         if (response.success) {
-            Toast.show('Job posted successfully!', 'success');
+            Toast.show(jobId ? 'Job updated successfully!' : 'Job posted successfully!', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1000);
@@ -504,10 +509,10 @@ async function postJob(event) {
             Toast.show(response.message, 'error');
         }
     } catch (error) {
-        Toast.show('Failed to post job', 'error');
+        Toast.show('Failed to save job', 'error');
     } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Post Job';
+        submitBtn.textContent = formData.get('id') ? 'Update Job' : 'Post Job';
     }
 }
 
@@ -600,6 +605,7 @@ async function loadMyJobs() {
                                     <td>${new Date(job.created_at).toLocaleDateString()}</td>
                                     <td>
                                         <a href="job-applications.html?id=${job.id}" class="btn btn-secondary" style="padding:6px 12px;font-size:12px;">View Applications</a>
+                                        <a href="post-job.html?id=${job.id}" class="btn btn-secondary" style="padding:6px 12px;font-size:12px;margin-left:5px;">Edit</a>
                                     </td>
                                 </tr>
                             `).join('')}

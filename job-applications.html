@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Applications - JobConnect</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="logo">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    <path
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 JobConnect
             </a>
@@ -38,7 +41,7 @@
             <div id="job-applications-container">
                 <div class="spinner"></div>
             </div>
-            
+
             <p style="margin-top:24px;">
                 <a href="dashboard.html" class="btn btn-secondary">← Back to Dashboard</a>
             </p>
@@ -50,14 +53,14 @@
         async function loadJobApplications() {
             const urlParams = new URLSearchParams(window.location.search);
             const jobId = urlParams.get('id');
-            
+
             if (!jobId) {
                 window.location.href = 'dashboard.html';
                 return;
             }
-            
+
             const container = document.getElementById('job-applications-container');
-            
+
             try {
                 const response = await ajax(`${API_BASE}/applications.php?action=job-applications&job_id=${jobId}`);
                 if (response.success && response.data.length > 0) {
@@ -68,16 +71,29 @@
                                     <tr>
                                         <th>Applicant</th>
                                         <th>Email</th>
+                                        <th>Resume</th>
+                                        <th>Profile</th>
                                         <th>Applied On</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${response.data.map(app => `
+                                    ${response.data.map(app => {
+                        // Fix resume path from ../uploads to uploads
+                        const resumeUrl = app.resume_path ? app.resume_path.replace('../', '') : '#';
+                        return `
                                         <tr>
                                             <td>${escapeHtml(app.name)}</td>
                                             <td>${escapeHtml(app.email)}</td>
+                                            <td>
+                                                ${app.resume_path ?
+                                `<a href="${resumeUrl}" target="_blank" class="btn btn-secondary" style="padding:4px 8px;font-size:12px;">View Resume</a>` :
+                                '<span style="color:var(--text-muted);">No Resume</span>'}
+                                            </td>
+                                            <td>
+                                                <a href="profile.html?id=${app.user_id}" target="_blank" class="btn btn-secondary" style="padding:4px 8px;font-size:12px;">View Profile</a>
+                                            </td>
                                             <td>${new Date(app.created_at).toLocaleDateString()}</td>
                                             <td><span class="status-badge ${app.status}">${app.status}</span></td>
                                             <td>
@@ -89,7 +105,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                    `).join('')}
+                                    `}).join('')}
                                 </tbody>
                             </table>
                         </div>
@@ -106,14 +122,14 @@
                 container.innerHTML = '<div class="empty-state"><h3>Failed to load applications</h3></div>';
             }
         }
-        
+
         async function updateApplicationStatus(applicationId, status) {
             try {
                 const formData = new FormData();
                 formData.append('action', 'update-status');
                 formData.append('application_id', applicationId);
                 formData.append('status', status);
-                
+
                 const response = await ajax(`${API_BASE}/applications.php`, 'POST', formData);
                 if (response.success) {
                     Toast.show('Status updated!', 'success');
@@ -124,8 +140,8 @@
                 Toast.show('Failed to update status', 'error');
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 if (!window.currentUser || window.currentUser.role !== 'employer') {
                     Toast.show('Only employers can view applications', 'error');
@@ -137,4 +153,5 @@
         });
     </script>
 </body>
+
 </html>

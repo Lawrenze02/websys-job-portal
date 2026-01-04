@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - JobConnect</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="logo">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    <path
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 JobConnect
             </a>
@@ -39,7 +42,10 @@
             <div id="employer-dashboard" style="display:none;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
                     <h2>Your Job Postings</h2>
-                    <a href="post-job.html" class="btn btn-primary">+ Post New Job</a>
+                    <div style="display:flex;gap:10px;">
+                        <a href="profile.html" class="btn btn-secondary">My Profile</a>
+                        <a href="post-job.html" class="btn btn-primary">+ Post New Job</a>
+                    </div>
                 </div>
                 <div id="my-jobs-container">
                     <div class="spinner"></div>
@@ -48,7 +54,13 @@
 
             <!-- Job Seeker Dashboard -->
             <div id="seeker-dashboard" style="display:none;">
-                <h2 style="margin-bottom:24px;">Your Applications</h2>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+                    <h2>Your Applications</h2>
+                    <div style="display:flex;gap:10px;">
+                        <a href="profile.html" class="btn btn-secondary">View Profile</a>
+                        <a href="profile-editor.html" class="btn btn-secondary">Manage Profile</a>
+                    </div>
+                </div>
                 <div id="applications-container">
                     <div class="spinner"></div>
                 </div>
@@ -66,7 +78,7 @@
 
     <script src="assets/js/main.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 if (!window.currentUser) {
                     document.getElementById('guest-dashboard').style.display = 'block';
@@ -86,4 +98,5 @@
         });
     </script>
 </body>
+
 </html>
